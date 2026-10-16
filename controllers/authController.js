@@ -6,7 +6,20 @@ exports.getLogin = (req, res, next) => {
     isLoggedIn: false,
   });
 };
+
+exports.getSignup = (req, res, next) => {
+  res.render("auth/signup", {
+    pageTitle: "signup",
+    currentPage: "signup",
+    isLoggedIn: false,
+  });
+};
+
 exports.postLogin = (req, res, next) => {
+  req.session.isLoggedIn = true;
+  res.redirect('/');
+};
+exports.postSignup = (req, res, next) => {
   req.session.isLoggedIn = true;
   res.redirect('/');
 };
