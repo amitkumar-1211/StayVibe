@@ -28,6 +28,12 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
+// Make the signup template's error list available on every render.
+app.use((req, res, next) => {
+  res.locals.errors = [];
+  next();
+});
+
 const store = new MongoDBStore({
   uri: DB_PATH,
   collection: 'Sessions'
@@ -47,13 +53,14 @@ app.use((req, res, next) => {
 });
 
 app.use(express.static(path.join(rootDir, 'public')));
-app.use(storeRouter);
+// Register authentication routes before the other application routes.
 app.use(authRouter);
+app.use(storeRouter);
 app.use("/host", (req, res, next) =>{
   if(req.isLoggedIn){
     next();
   } else{
-    res.redirect("/Login");
+    res.redirect("/login");
   }
 });
 app.use("/host", hostRouter);

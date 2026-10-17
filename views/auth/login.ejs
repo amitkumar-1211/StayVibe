@@ -4,7 +4,10 @@
     <%- include('../partials/nav') %>
     <main class="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md">
       <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Login with your info</h1>
-      <form action="/Login" method="POST" class="max-w-md mx-auto">
+      <% if (typeof error !== 'undefined' && error) { %>
+        <p role="alert" class="mx-auto mb-4 max-w-md rounded border border-red-500 bg-red-50 px-4 py-2 text-sm text-red-700"><%= error %></p>
+      <% } %>
+      <form action="/login" method="POST" class="max-w-md mx-auto">
         <input
           type="text"
           name="username"

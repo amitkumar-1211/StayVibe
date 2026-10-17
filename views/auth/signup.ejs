@@ -7,7 +7,19 @@
       <section class="w-full max-w-sm rounded-sm bg-white px-6 py-6 shadow-md sm:px-8">
         <h1 class="mb-5 border-b border-gray-200 pb-4 text-center text-2xl font-bold text-gray-900">Create Your Account</h1>
 
-        <form action="/signup" method="POST" class="space-y-3.5">
+        <form action="/signup" method="POST" class="space-y-3.5" novalidate>
+
+           <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+              <div role="alert" class="rounded border border-red-500 bg-red-50 px-3 py-2 text-sm text-red-700">
+                <strong class="font-bold">Please fix the following:</strong>
+                <ul class="mt-1 list-inside list-disc">
+                  <% errors.forEach(error => { %>
+                    <li><%= error %></li>
+                  <% }) %>
+                </ul>
+              </div>
+              <% } %>
+
           <div class="grid grid-cols-2 gap-3">
             <div>
               <label for="firstName" class="mb-1 block text-xs font-medium text-gray-700">First Name</label>
@@ -67,7 +79,7 @@
             Register <span aria-hidden="true">→</span>
           </button>
 
-          <p class="text-center text-xs text-gray-600">Already have an account? <a href="/Login" class="font-medium text-red-500 hover:text-red-700">Log in</a></p>
+          <p class="text-center text-xs text-gray-600">Already have an account? <a href="/login" class="font-medium text-red-500 hover:text-red-700">Log in</a></p>
         </form>
       </section>
     </main>
