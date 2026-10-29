@@ -9,30 +9,23 @@
 
         <form action="/signup" method="POST" class="space-y-3.5" novalidate>
 
-           <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
-              <div role="alert" class="rounded border bg-red-100 border border-red-500 px-3 py-2 text-sm text-red-700">
-                <strong class="font-bold">Please fix the following:</strong>
-                <ul class="mt-1 list-inside list-disc">
-                  <% errors.forEach(error => { %>
-                    <li><%= error %></li>
-                  <% }) %>
-                </ul>
-              </div>
-              <% } %>
+           <%- include('../partials/errors') %>
 
           <div class="grid grid-cols-2 gap-3">
             <div>
               <label for="firstName" class="mb-1 block text-xs font-medium text-gray-700">First Name</label>
               <div class="flex items-center rounded border border-gray-300 px-2.5 focus-within:border-red-500 focus-within:ring-1 focus-within:ring-red-500">
                 <svg aria-hidden="true" class="h-4 w-4 shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor"><path d="M10 10a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM3 17a7 7 0 0 1 14 0H3Z"/></svg>
-                <input id="firstName" type="text" name="firstName" placeholder="John" autocomplete="given-name" required class="w-full border-0 bg-transparent px-2 py-2 text-sm outline-none placeholder:text-gray-400" />
+                <input id="firstName" type="text" name="firstName" placeholder="John" 
+                value="<%= oldInput.firstName ? oldInput.firstName : '' %>" autocomplete="given-name" required class="w-full border-0 bg-transparent px-2 py-2 text-sm outline-none placeholder:text-gray-400" />
               </div>
             </div>
             <div>
               <label for="lastName" class="mb-1 block text-xs font-medium text-gray-700">Last Name</label>
               <div class="flex items-center rounded border border-gray-300 px-2.5 focus-within:border-red-500 focus-within:ring-1 focus-within:ring-red-500">
                 <svg aria-hidden="true" class="h-4 w-4 shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor"><path d="M10 10a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM3 17a7 7 0 0 1 14 0H3Z"/></svg>
-                <input id="lastName" type="text" name="lastName" placeholder="Doe" autocomplete="family-name" class="w-full border-0 bg-transparent px-2 py-2 text-sm outline-none placeholder:text-gray-400" />
+                <input id="lastName" type="text" name="lastName" placeholder="Doe" 
+                value="<%= oldInput.lastName ? oldInput.lastName : '' %>" autocomplete="family-name" class="w-full border-0 bg-transparent px-2 py-2 text-sm outline-none placeholder:text-gray-400" />
               </div>
             </div>
           </div>

@@ -1,5 +1,6 @@
 const { check, validationResult } = require("express-validator");
 const User = require("../models/user");
+const bcrypt = require("bcryptjs");
 
 exports.getLogin = (req, res, next) => {
   res.render("auth/login", {
@@ -91,19 +92,16 @@ exports.postSignup = [
       });
     }
 
-    const user = new User({
-      firstName,
-      lastName,
-      email,
-      password,
-      userType
-    });
-    user.save()
-      .then(() =>{
+    bcrypt.hash(password, 12)
+      .then(hashedPassword => {
+        const user = new User({firstName, lastName, email, password: hashedPassword, userType});
+        return user.save();
+      })
+      .then(() => {
         res.redirect("/login");
-      }).catch(err => {
-        console.log(err);
-        res.status(500).render("auth/signup", {
+      })
+      .catch(err => {
+        return res.status(422).render("auth/signup", {
           pageTitle: "Signup",
           currentPage: "signup",
           isLoggedIn: false,
@@ -115,18 +113,47 @@ exports.postSignup = [
 ]
 
 exports.postLogin = async (req, res, next) => {
-  console.log(req.body);
-  if (!req.body.username || !req.body.password) {
-    return res.status(422).render("auth/login", {
-      pageTitle: "Login",
-      currentPage: "login",
-      isLoggedIn: false,
-      error: "Please enter your username and password.",
-    });
-  }
+  const {email, password} = req.body;
+  try {
+    const user = await User.findOne({email});
+    if (!user) {
+      return res.status(422).render("auth/login", {
+        pageTitle: "Login",
+        currentPage: "login",
+        isLoggedIn: false,
+        errors: ["Invalid email or password"],
+        oldInput: {email}
+      });
+    }
 
-  req.session.isLoggedIn = true;
-  res.redirect("/");
+    const passwordMatches = await bcrypt.compare(password, user.password);
+    if (!passwordMatches) {
+      return res.status(422).render("auth/login", {
+        pageTitle: "Login",
+        currentPage: "login",
+        isLoggedIn: false,
+        errors: ["Invalid email or password"],
+        oldInput: {email}
+      });
+    }
+
+    req.session.isLoggedIn = true;
+    // Store plain session data; the MongoDB session store uses a different
+    // BSON version than Mongoose, so don't put the full Mongoose document here.
+    req.session.user = {
+      _id: user._id.toString(),
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      userType: user.userType
+    };
+    req.session.save(err => {
+      if (err) return next(err);
+      res.redirect("/");
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
 exports.postLogout = (req, res, next) => {
