@@ -10,6 +10,8 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: [true, 'Password is required'] },
   
   userType: { type: String, enum: ['guest', 'host'], required: [true, 'User type is required'] },
+
+  favourites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Home' }],
 });
 
 module.exports = mongoose.model('User', userSchema);

@@ -88,7 +88,8 @@ exports.postSignup = [
         currentPage: "signup",
         isLoggedIn: false,
         errors: errors.array().map(err => err.msg),
-        oldInput: {firstName, lastName, email, password, userType }
+        oldInput: {firstName, lastName, email, password, userType },
+        user: {},
       });
     }
 
@@ -106,7 +107,8 @@ exports.postSignup = [
           currentPage: "signup",
           isLoggedIn: false,
           errors: [err.message],
-          oldInput: {firstName, lastName, email, password, userType }
+          oldInput: {firstName, lastName, email, password, userType },
+          user: {},
         });
       });
   }
@@ -122,7 +124,8 @@ exports.postLogin = async (req, res, next) => {
         currentPage: "login",
         isLoggedIn: false,
         errors: ["Invalid email or password"],
-        oldInput: {email}
+        oldInput: {email},
+        user: {},
       });
     }
 
@@ -133,7 +136,8 @@ exports.postLogin = async (req, res, next) => {
         currentPage: "login",
         isLoggedIn: false,
         errors: ["Invalid email or password"],
-        oldInput: {email}
+        oldInput: {email},
+        user: {},
       });
     }
 
